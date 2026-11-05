@@ -1,6 +1,6 @@
 veyga-microservice:
   deployment:
     env:
-      BACKGROUND_COLOR: purple
+      BACKGROUND_COLOR: orange
   ingress:
     host: helloapp-dev.veyga.click
