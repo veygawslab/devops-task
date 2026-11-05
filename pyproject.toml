@@ -1,0 +1,17 @@
+[project]
+name = "exampleapp"
+version = "0.1.0"
+description = "Example FastAPI app for the veygawslab delivery pipeline"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.115",
+    "jinja2>=3.1.6",
+    "pydantic-settings>=2.16.2",
+    "uvicorn>=0.32",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.16", # fastapi.testclient (starlette)
+    "pytest>=8",
+]

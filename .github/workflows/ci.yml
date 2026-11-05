@@ -1,0 +1,18 @@
+# Build + test on PRs, release on merge to main: veygawslab/awslab's shared app-ci workflow
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write # release tag + GitHub release
+  pull-requests: read # find the PR a merge came from
+
+jobs:
+  ci:
+    uses: veygawslab/awslab/.github/workflows/app-ci.yml@main
+    with:
+      image: veyga/exampleapp
+      test-command: just test

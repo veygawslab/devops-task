@@ -1,0 +1,6 @@
+veyga-microservice:
+  deployment:
+    env:
+      BACKGROUND_COLOR: green
+  ingress:
+    host: exampleapp.veyga.click

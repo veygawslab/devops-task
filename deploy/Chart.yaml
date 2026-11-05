@@ -1,0 +1,12 @@
+apiVersion: v2
+name: exampleapp
+type: application
+
+version: 0.0.1
+appVersion: 0.0.1
+
+# Kargo renders this chart (per stage, with manifests/ values) into veygawslab/gitops
+dependencies:
+  - name: veyga-microservice
+    repository: oci://public.ecr.aws/p2z1f4j3/charts
+    version: 0.0.x

@@ -1,0 +1,8 @@
+*
+!Dockerfile
+!pytest.ini
+!src
+!tests
+!pyproject.toml
+!uv.lock
+!justfile.container

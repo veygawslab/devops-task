@@ -1,0 +1,93 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: exampleapp
+  namespace: argocd
+spec:
+  ignoreApplicationDifferences:
+    - jsonPointers:
+        - /spec/syncPolicy
+
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+
+  generators:
+    # ---- App deployments ----
+    # One entry per Kargo stage. Each needs a matching stage in deploy/kargo/values.yaml
+    # (with the same namespace) and a values file at deploy/manifests/overlays/<stage>/.
+    - list:
+        elements:
+          - stage: dev
+            namespace: exampleapp-dev
+          - stage: prod
+            namespace: exampleapp
+    # ---- Kargo (all fields empty for missingkey=error compat) ----
+    - list:
+        elements:
+          - stage: ""
+            namespace: ""
+
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+
+  template:
+    metadata:
+      name: 'exampleapp-{{ .stage }}'
+      annotations:
+        argocd.argoproj.io/sync-options: Delete=false
+      labels:
+        stage: '{{ .stage }}'
+    spec:
+      project: default
+      source:
+        # Kargo renders deploy/ per stage and commits plain manifests to
+        # veygawslab/gitops at <stage>/exampleapp/
+        repoURL: https://github.com/veygawslab/gitops.git
+        targetRevision: main
+        path: '{{ .stage }}/exampleapp'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ .namespace }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          # the app's namespace isn't managed anywhere else: Argo CD creates it on first sync
+          - CreateNamespace=true
+
+  templatePatch: |
+    {{- if .stage }}
+    metadata:
+      annotations:
+        kargo.akuity.io/authorized-stage: kargo-exampleapp:{{ .stage }}
+    {{- else }}
+    metadata:
+      name: exampleapp-kargo
+      labels:
+        managed-by: kargo
+    spec:
+      source:
+        repoURL: https://github.com/veygawslab/exampleapp.git
+        targetRevision: main
+        path: deploy/kargo
+        helm:
+          releaseName: exampleapp-kargo
+          valueFiles:
+            - values.yaml
+      destination:
+        namespace: kargo-exampleapp
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions: []
+        # the Project creates its namespace asynchronously, so the first sync of the
+        # namespaced resources can race it
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 3m
+    {{- end }}
