@@ -1,7 +1,7 @@
 veyga-microservice:
   image:
-    # Kargo sets this to veyga/exampleapp:<tag> from the promoted freight
-    repository: veyga/exampleapp:latest
+    # Kargo sets this to veyga/helloapp:<tag> from the promoted freight
+    repository: veyga/helloapp:latest
   deployment:
     httpPort: 8080
     replicas: 1

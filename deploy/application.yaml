@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: exampleapp
+  name: helloapp
   namespace: argocd
 spec:
   ignoreApplicationDifferences:
@@ -18,9 +18,9 @@ spec:
     - list:
         elements:
           - stage: dev
-            namespace: exampleapp-dev
+            namespace: helloapp-dev
           - stage: prod
-            namespace: exampleapp
+            namespace: helloapp
     # ---- Kargo (all fields empty for missingkey=error compat) ----
     - list:
         elements:
@@ -32,7 +32,7 @@ spec:
 
   template:
     metadata:
-      name: 'exampleapp-{{ .stage }}'
+      name: 'helloapp-{{ .stage }}'
       annotations:
         argocd.argoproj.io/sync-options: Delete=false
       labels:
@@ -41,10 +41,10 @@ spec:
       project: default
       source:
         # Kargo renders deploy/ per stage and commits plain manifests to
-        # veygawslab/gitops at <stage>/exampleapp/
+        # veygawslab/gitops at <stage>/helloapp/
         repoURL: https://github.com/veygawslab/gitops.git
         targetRevision: main
-        path: '{{ .stage }}/exampleapp'
+        path: '{{ .stage }}/helloapp'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{ .namespace }}'
@@ -60,23 +60,23 @@ spec:
     {{- if .stage }}
     metadata:
       annotations:
-        kargo.akuity.io/authorized-stage: kargo-exampleapp:{{ .stage }}
+        kargo.akuity.io/authorized-stage: kargo-helloapp:{{ .stage }}
     {{- else }}
     metadata:
-      name: exampleapp-kargo
+      name: helloapp-kargo
       labels:
         managed-by: kargo
     spec:
       source:
-        repoURL: https://github.com/veygawslab/exampleapp.git
+        repoURL: https://github.com/veygawslab/devops-task.git
         targetRevision: main
         path: deploy/kargo
         helm:
-          releaseName: exampleapp-kargo
+          releaseName: helloapp-kargo
           valueFiles:
             - values.yaml
       destination:
-        namespace: kargo-exampleapp
+        namespace: kargo-helloapp
       syncPolicy:
         automated:
           prune: true

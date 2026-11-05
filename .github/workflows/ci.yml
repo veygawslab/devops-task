@@ -14,5 +14,5 @@ jobs:
   ci:
     uses: veygawslab/awslab/.github/workflows/app-ci.yml@main
     with:
-      image: veyga/exampleapp
+      image: veyga/helloapp
       test-command: just test

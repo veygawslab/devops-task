@@ -1,4 +1,4 @@
-"""exampleapp: GET / is a page in the environment's color, GET /json the same as JSON,
+"""helloapp: GET / is a page in the environment's color, GET /json the same as JSON,
 GET /healthz the liveness check."""
 
 from pathlib import Path
@@ -9,14 +9,14 @@ from fastapi.templating import Jinja2Templates
 
 from src.shared.settings import settings as s
 
-app = FastAPI(title="exampleapp", version=s.VERSION)
+app = FastAPI(title="helloapp", version=s.VERSION)
 
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
 
 def info() -> dict:
     return {
-        "app": "exampleapp",
+        "app": "helloapp",
         "version": s.VERSION,
         "environment": s.ENVIRONMENT,
         "color": s.COLOR,

@@ -1,6 +1,6 @@
 veyga-kargo:
-  name: exampleapp
-  gitRepo: https://github.com/veygawslab/exampleapp.git
+  name: helloapp
+  gitRepo: https://github.com/veygawslab/devops-task.git
 
   # each stage renders with ENVIRONMENT=<stage name> (dev, prod)
   render:
@@ -8,23 +8,23 @@ veyga-kargo:
 
   # Kargo writes the promoted tag into the image (the chart takes repository:tag)
   images:
-    - repoURL: 519915467343.dkr.ecr.us-east-1.amazonaws.com/veyga/exampleapp
+    - repoURL: 519915467343.dkr.ecr.us-east-1.amazonaws.com/veyga/helloapp
       helmValueKey: veyga-microservice.image.repository
-      helmValuePrefix: "veyga/exampleapp:"
+      helmValuePrefix: "veyga/helloapp:"
 
   # dev: PR builds and releases, promoted by hand; prod: releases already verified in dev.
   # valuesFiles are repo-root relative and applied in order.
   stages:
     - name: dev
       warehouse: dev
-      namespace: exampleapp-dev # must match deploy/application.yaml
+      namespace: helloapp-dev # must match deploy/application.yaml
       valuesFiles:
         - deploy/manifests/bases/common/values.yaml
         - deploy/manifests/overlays/dev/values.yaml
     - name: prod
       warehouse: prod
       upstream: [dev]
-      namespace: exampleapp # must match deploy/application.yaml
+      namespace: helloapp # must match deploy/application.yaml
       valuesFiles:
         - deploy/manifests/bases/common/values.yaml
         - deploy/manifests/overlays/prod/values.yaml

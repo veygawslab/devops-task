@@ -1,5 +1,5 @@
 [project]
-name = "exampleapp"
+name = "helloapp"
 version = "0.1.0"
 description = "Example FastAPI app for the veygawslab delivery pipeline"
 requires-python = ">=3.14"

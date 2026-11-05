@@ -1,11 +1,11 @@
 apiVersion: v2
-name: exampleapp-kargo
+name: helloapp-kargo
 type: application
 
 version: 0.0.1
 appVersion: 0.0.1
 
-# exampleapp's Kargo pipeline; installed by Argo CD from veygawslab/gitops root/exampleapp.yaml
+# helloapp's Kargo pipeline; installed by deploy/application.yaml's ApplicationSet (helloapp-kargo)
 dependencies:
   - name: veyga-kargo
     repository: oci://public.ecr.aws/p2z1f4j3/charts

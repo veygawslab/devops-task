@@ -3,4 +3,4 @@ veyga-microservice:
     env:
       BACKGROUND_COLOR: green
   ingress:
-    host: exampleapp.veyga.click
+    host: helloapp.veyga.click
